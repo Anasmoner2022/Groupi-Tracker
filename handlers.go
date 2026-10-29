@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"html/template"
 	"log"
@@ -9,14 +10,17 @@ import (
 	"strings"
 )
 
+//go:embed templates/*.html
+var templateFiles embed.FS
+
 var (
 	HomeTemplate   *template.Template
 	ArtistTemplate *template.Template
 )
 
 func init() {
-	HomeTemplate = template.Must(template.ParseFiles("templates/index.html"))
-	ArtistTemplate = template.Must(template.ParseFiles("templates/artist.html"))
+	HomeTemplate = template.Must(template.ParseFS(templateFiles, "templates/index.html"))
+	ArtistTemplate = template.Must(template.ParseFS(templateFiles, "templates/artist.html"))
 }
 
 func HomeHandler(resp http.ResponseWriter, req *http.Request) {

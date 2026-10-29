@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
+
+var apiClient = &http.Client{Timeout: 10 * time.Second}
 
 var (
 	ArtistCache   []Artist
@@ -35,7 +38,7 @@ func InitCache() error {
 }
 
 func getArtists() ([]Artist, error) {
-	resp, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	resp, err := apiClient.Get("https://groupietrackers.herokuapp.com/api/artists")
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
@@ -52,7 +55,7 @@ func getArtists() ([]Artist, error) {
 }
 
 func getRelations() (*Relations, error) {
-	resp, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
+	resp, err := apiClient.Get("https://groupietrackers.herokuapp.com/api/relation")
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
